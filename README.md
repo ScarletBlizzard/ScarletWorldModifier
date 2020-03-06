@@ -21,8 +21,8 @@ config {
 
 **Important!**
 
-*block-id* refers to the id of the block with its variant if it has any. For example, if you want to write id of the simple
-dirt block, you have to write `minecraft:dirt[variant:dirt]` but not just `minecraft:dirt`.
+*block-id* refers to the id of the block with its variants if it has any. For example, if you want to write id of a simple
+dirt block, you have to write `minecraft:dirt[snowy=false,variant:dirt]` but not just `minecraft:dirt`.
 
 If *final-block-id* is invalid, then block with *original-block-id* will be replaced by stone.
 

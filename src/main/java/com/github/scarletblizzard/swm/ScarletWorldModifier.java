@@ -38,7 +38,7 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 
 @Plugin(id = "scarlet_world_modifier", name = "ScarletWorldModifier",
-        version = "1.0.0", authors = "ScarletBlizzard", 
+        version = "2.0.0", authors = "ScarletBlizzard", 
         description = "A configurable Sponge plugin for modifying world generation by replacing blocks.",
         url = "https://github.com/ScarletBlizzard/ScarletWorlds")
 public class ScarletWorldModifier {

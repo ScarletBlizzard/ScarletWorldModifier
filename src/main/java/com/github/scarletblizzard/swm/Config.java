@@ -45,7 +45,7 @@ public class Config {
             if (!config.exists()) {
                 config.createNewFile();
                 rootNode = configLoader.load();
-                addDefaultValues();
+                setConfigComment();
                 configLoader.save(rootNode);
             }
             rootNode = configLoader.load();
@@ -54,7 +54,7 @@ public class Config {
         }
     }
     
-    private static void addDefaultValues() {
+    private static void setConfigComment() {
         CommentedConfigurationNode configNode = rootNode.getNode("config");
         configNode.setComment("This is the configuration file for"
                 + "ScarletWorldModifier plugin for Sponge.\n"

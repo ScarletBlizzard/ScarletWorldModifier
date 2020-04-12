@@ -24,9 +24,8 @@
 
 package com.github.scarletblizzard.swm;
 
-import com.flowpowered.math.vector.Vector3i;
 import java.io.IOException;
-import ninja.leaping.configurate.ConfigurationNode;
+
 import org.spongepowered.api.GameRegistry;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
@@ -36,8 +35,15 @@ import org.spongepowered.api.world.extent.ImmutableBiomeVolume;
 import org.spongepowered.api.world.extent.MutableBlockVolume;
 import org.spongepowered.api.world.gen.GenerationPopulator;
 
+import com.flowpowered.math.vector.Vector3i;
+
+import ninja.leaping.configurate.ConfigurationNode;
+
 public class BlockPopulator implements GenerationPopulator {
 
+	GameRegistry registry = Sponge.getRegistry();
+    BlockState defaultBlock = BlockTypes.STONE.getDefaultState();
+	
     @Override
     public void populate(World world, MutableBlockVolume buffer, ImmutableBiomeVolume biomes) {
         try {
@@ -46,32 +52,56 @@ public class BlockPopulator implements GenerationPopulator {
             ConfigurationNode globalNode = worldNode.getNode("global");
             ConfigurationNode biomesNode = worldNode.getNode("biomes");
             
-            GameRegistry registry = Sponge.getRegistry();
-            BlockState defaultBlock = BlockTypes.STONE.getDefaultState();
-            
             final Vector3i max = buffer.getBlockMax();
             final Vector3i min = buffer.getBlockMin();
             for (int x = min.getX(); x <= max.getX(); x++) {
                 for (int z = min.getZ(); z <= max.getZ(); z++) {
                     for (int y = 0; y < 256; y++) {
-                        String originalBlockId = buffer.getBlock(x, y, z).getId();
-                        if (globalNode.getNode(originalBlockId) != null) {
-                            String finalBlockId = globalNode.getNode(originalBlockId).getString();
-                            if (finalBlockId != null)
-                                buffer.setBlock(x, y, z, registry.getType(BlockState.class, finalBlockId).orElse(defaultBlock));
+                    	
+                    	Vector3i position = new Vector3i(x, y, z);
+                        String originalBlockId = buffer.getBlock(position).getId();
+                        String modifiedBlockId = null;
+                        if (originalBlockId.contains("["))
+                        	modifiedBlockId = originalBlockId.split("\\[")[0];
+                        
+                        
+                        ConfigurationNode blockNode = globalNode.getNode(originalBlockId);
+                        if (!blockNode.isVirtual()) {
+                        	String finalBlockId = blockNode.getString();
+                        	setBlock(finalBlockId, buffer, position);
+                        } else if (modifiedBlockId != null) {
+                        	ConfigurationNode modifiedBlockNode = globalNode.getNode(modifiedBlockId);
+                        	if (!modifiedBlockNode.isVirtual()) {
+                        		String finalBlockId = modifiedBlockNode.getString();
+                            	setBlock(finalBlockId, buffer, position);
+                        	}
                         }
+                        
                         String biomeId = biomes.getBiome(x, 0, z).getId();
-                        if (biomesNode.getNode(biomeId).getNode(biomeId).getNode(originalBlockId) != null) {
-                            String finalBlockId = biomesNode.getNode(biomeId).getNode(originalBlockId).getString();
-                            if (finalBlockId != null)
-                                buffer.setBlock(x, y, z, registry.getType(BlockState.class, finalBlockId).orElse(defaultBlock));
+                        ConfigurationNode biomeNode = biomesNode.getNode(biomeId).getNode(biomeId);
+                        ConfigurationNode biomeBlockNode = biomeNode.getNode(originalBlockId);
+                        if (!biomeBlockNode.isVirtual()) {
+                            String finalBlockId = biomeBlockNode.getString();
+                        	setBlock(finalBlockId, buffer, position);
+                        } else if (modifiedBlockId != null) {
+                        	ConfigurationNode modifiedBlockNode = biomeNode.getNode(modifiedBlockId);
+                        	if (!modifiedBlockNode.isVirtual()) {
+                                String finalBlockId = modifiedBlockNode.getString();
+                            	setBlock(finalBlockId, buffer, position);
+                        	}
                         }
+                        
                     }
                 }
             }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+    
+    private void setBlock(String finalBlockId, MutableBlockVolume buffer, Vector3i position) {
+        if (finalBlockId != null)
+            buffer.setBlock(position, registry.getType(BlockState.class, finalBlockId).orElse(defaultBlock));
     }
     
 }

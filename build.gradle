@@ -6,7 +6,7 @@ plugins {
 compileJava.options.encoding = 'UTF-8'
 
 group = 'com.github.scarletblizzard.swm'
-version = '1.0.0'
+version = '2.0.0'
 description = 'A configurable Sponge plugin for modifying world generation by replacing blocks.'
 
 repositories {

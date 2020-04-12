@@ -3,7 +3,7 @@ A configurable Sponge plugin for modifying world generation by replacing blocks.
 
 Edit `scarlet_world_modifier.conf` in `config` directory to manage block replacements in specific worlds and biomes.
 
-**Sample config:**
+## Sample config
 <pre>
 config {
     <i>world-name</i> {
@@ -19,10 +19,7 @@ config {
 }
 </pre>
 
-**Important!**
-
-*block-id* refers to the id of the block with its variants if it has any. For example, if you want to write id of a simple
-dirt block, you have to write `minecraft:dirt[snowy=false,variant:dirt]` but not just `minecraft:dirt`.
+## Important!
 
 If *final-block-id* is invalid, then block with *original-block-id* will be replaced by stone.
 
@@ -33,4 +30,50 @@ sponge/worlds/minecraft/`*dimension*`/`*world-name*`/world.conf`:
 world-generation-modifiers=[
     "scarlet_world_modifier:swm"
 ]
+</pre>
+
+## Examples
+### Hell
+![swm hell](https://i.imgur.com/W0HSeBR.png)
+Config:
+<pre>
+config {
+    hell {
+	global {
+	    "minecraft:dirt"="minecraft:netherrack"
+	    "minecraft:grass"="minecraft:netherrack"
+	    "minecraft:gravel"="minecraft:soul_sand"
+	    "minecraft:hardened_clay"="minecraft:netherrack"
+	    "minecraft:ice"="minecraft:lava"
+	    "minecraft:mycelium"="minecraft:netherrack"
+	    "minecraft:mossy_cobblestone"="minecraft:netherrack"
+	    "minecraft:red_sand"="minecraft:soul_sand"
+	    "minecraft:red_sand"="minecraft:netherrack"
+	    "minecraft:sand"="minecraft:soul_sand"
+	    "minecraft:snow"="minecraft:air"
+	    "minecraft:snow_layer"="minecraft:air"
+	    "minecraft:packed_ice"="minecraft:air"
+	    "minecraft:stained_hardened_clay"="minecraft:netherrack"
+	    "minecraft:stone"="minecraft:netherrack"
+	    "minecraft:water"="minecraft:lava"
+	}
+    }
+}
+</pre>
+### Arid
+![swm arid](https://i.imgur.com/Q1jvNKc.png)
+Config:
+<pre>
+config {
+    arid {
+	global {
+	    "minecraft:grass"="minecraft:dirt[variant=coarse_dirt]"
+	    "minecraft:ice"="minecraft:water"
+	    "minecraft:snow"="minecraft:air"
+	    "minecraft:snow_layer"="minecraft:air"
+	    "minecraft:packed_ice"="minecraft:air"
+	    "minecraft:water"="minecraft:air"
+	}
+    }
+}
 </pre>
